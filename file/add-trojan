@@ -1,0 +1,51 @@
+#!/bin/bash
+domain=$(cat /etc/v2ray/domain.txt)
+uuid=$(cat /proc/sys/kernel/random/uuid)
+pwd=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)
+lvl=8
+clear
+echo "================================"
+echo "        Tambah Akun Trojan"
+echo "================================"
+echo "• IP      : ${domain}"
+echo "• Port    : 2087(tls)"
+echo "• Network : gRPC"
+echo "• Service : trojan gRPC"
+echo "• Type    : tls"
+echo "• Path/SN : trgrpc"
+echo "=============================="
+read -p $'\u27A4 Username : ' username
+read -p $'\u27A4 Expired (days): ' exp
+re='^[0-9]+$'
+if ! [[ $exp =~ $re ]] ; then
+   echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-trojan
+fi
+expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
+if [ -f "/etc/v2ray/trojan/$username.json" ]; then
+    echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
+    echo " [ ! ] Silahkan gunakan username lain."
+    exit 1
+fi
+cat > /etc/v2ray/trojan/$username.json <<-EOF
+trojan://${pwd}@${domain}:2087?mode=gun&security=tls&type=grpc&serviceName=trgrpc&sni=${domain}#${username}
+EOF
+sed -i "/\"clients\": \[/a\ \ \ \ \ \ \ \ {\n\ \ \ \ \ \ \ \ \ \ \ \"utag\": \"$username\",\n\ \ \ \ \ \ \ \ \ \ \ \"exp\": \"$expired_date\",\n\ \ \ \ \ \ \ \ \ \ \ \"password\": \"$pwd\",\n\ \ \ \ \ \ \ \ \ \ \ \"level\": $lvl\n\ \ \ \ \ \ \ \ }," /etc/v2ray/config/trojan.json
+clear
+trgrpc=$(cat /etc/v2ray/trojan/$username.json)
+echo "================================";
+echo "========= TROJAN gRPC ==========";
+echo "• TAG : ${username}"
+echo "• IP : ${domain}";
+echo "• PORT : 2087"
+echo "• LEVEL : ${lvl}"
+echo "• PASSWORD : ${pwd}"
+echo "• NETWORK : grpc"
+echo "• SERVICE NAME : trgrpc"
+echo "• EXPIRED : $expired_date"
+echo "============= LINK =============";
+echo "[ TROJAN gRPC ] : ${trgrpc}"
+echo "================================";
+service v2ray@trojan restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-trojan

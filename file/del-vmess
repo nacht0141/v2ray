@@ -1,0 +1,42 @@
+#!/bin/bash
+clear
+echo "╭──────────────────────────────────────────────╮"
+echo "│               DELETE AKUN VMESS              │"
+echo "╰──────────────────────────────────────────────╯"
+read -p $'\u27A4 Username : ' username
+
+# check if configuration file exists
+if [ ! -f "/etc/v2ray/vmess/$username-tls.json" ] || [ ! -f "/etc/v2ray/vmess/$username-ntls.json" ]; then
+    echo " [ ! ] Maaf konfigurasi vmess  $username tidak ditemukan."
+    echo ""
+    read -p $'[PRESS ENTER] \u27A4'
+    menu-vmess
+    exit 1
+fi
+printf "╭──────────────────────────────────────────────╮\n"
+printf "│               DELETE AKUN VMESS              │\n"
+printf "├───────────────────┬──────────────────────────┤\n"
+printf "│      Username     │          Status          │\n"
+printf "├───────────────────┼──────────────────────────┤\n"
+
+if grep -q "\"utag\": \"$username\"" /etc/v2ray/config/config.json; then
+  sed -i "/\"utag\": \"$username\"/,/{/d" /etc/v2ray/config/config.json
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted from config.json"
+else
+  printf "│ %-17s │ %-24s │\n" "$username" "Not found in config.json"
+fi
+
+if [ -f "/etc/v2ray/vmess/$username-tls.json" ]; then
+  rm -f "/etc/v2ray/vmess/$username-tls.json"
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted $username-tls.json"
+fi
+if [ -f "/etc/v2ray/vmess/$username-ntls.json" ]; then
+  rm -f "/etc/v2ray/vmess/$username-ntls.json"
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted $username-ntls.json"
+fi
+
+printf "╰───────────────────┴──────────────────────────╯\n"
+service v2ray restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-vmess

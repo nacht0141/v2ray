@@ -1,0 +1,25 @@
+#!/bin/bash
+clear
+config=$(cat /etc/v2ray/config/vless.json)
+#users=$(echo "$config" | grep -oP '(?<="utag": ")[^"]*|(?<="exp": ")[^"]*')
+users=$(echo "$config" | grep -oP '(?<="utag": ")[^"]*|(?<="exp": ")[^"]*' | awk '!a[$1]++')
+if [ -z "$users" ]; then
+  echo "Tidak ada user atau client saat ini pada vless."
+else
+  printf "╭────────────────────────────────────────╮\n"
+  printf "│             LIST USER VLESS            │\n"
+  printf "│──────────────────────┬─────────────────│\n"
+  printf "│ %-20s │ %-15s │\n" "User" "Expired"
+  printf "├──────────────────────┼─────────────────┤\n"
+
+  while read -r utag; do
+    read -r exp
+    printf "│ %-20s │ %-15s │\n" "$utag" "$exp"
+  done <<< "$users"
+
+  printf "╰──────────────────────┴─────────────────╯\n"
+  printf " [NOTE] Setiap akun akan di hapus pada jam 00:00.\n"
+fi
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-vless

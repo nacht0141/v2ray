@@ -1,0 +1,42 @@
+#!/bin/bash
+clear
+echo "╭──────────────────────────────────────────────╮"
+echo "│               DELETE AKUN VLESS              │"
+echo "╰──────────────────────────────────────────────╯"
+read -p $'\u27A4 Username : ' username
+
+# check if configuration file exists
+if [ ! -f "/etc/v2ray/vless/$username-tls.json" ] || [ ! -f "/etc/v2ray/vless/$username-ntls.json" ]; then
+    echo " [ ! ] Maaf konfigurasi vless  $username tidak ditemukan."
+    echo ""
+    read -p $'[PRESS ENTER] \u27A4'
+    menu-vless
+    exit 1
+fi
+printf "╭──────────────────────────────────────────────╮\n"
+printf "│               DELETE AKUN VLESS              │\n"
+printf "├───────────────────┬──────────────────────────┤\n"
+printf "│      Username     │          Status          │\n"
+printf "├───────────────────┼──────────────────────────┤\n"
+
+if grep -q "\"utag\": \"$username\"" /etc/v2ray/config/vless.json; then
+  sed -i "/\"utag\": \"$username\"/,/{/d" /etc/v2ray/config/vless.json
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted from vless.json"
+else
+  printf "│ %-17s │ %-24s │\n" "$username" "Not found in vless.json"
+fi
+
+if [ -f "/etc/v2ray/vless/$username-tls.json" ]; then
+  rm -f "/etc/v2ray/vless/$username-tls.json"
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted $username-tls.json"
+fi
+if [ -f "/etc/v2ray/vless/$username-ntls.json" ]; then
+  rm -f "/etc/v2ray/vless/$username-ntls.json"
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted $username-ntls.json"
+fi
+
+printf "╰───────────────────┴──────────────────────────╯\n"
+service v2ray@vless restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-vless

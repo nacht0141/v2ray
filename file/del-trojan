@@ -1,0 +1,38 @@
+#!/bin/bash
+clear
+echo "╭──────────────────────────────────────────────╮"
+echo "│               DELETE AKUN TROJAN             │"
+echo "╰──────────────────────────────────────────────╯"
+read -p $'\u27A4 Username : ' username
+
+# check if configuration file exists
+if [ ! -f "/etc/v2ray/trojan/$username.json" ]; then
+    echo " [ ! ] Maaf konfigurasi trojan  $username tidak ditemukan."
+    echo ""
+    read -p $'[PRESS ENTER] \u27A4'
+    menu-trojan
+    exit 1
+fi
+printf "╭──────────────────────────────────────────────╮\n"
+printf "│               DELETE AKUN TROJAN             │\n"
+printf "├───────────────────┬──────────────────────────┤\n"
+printf "│      Username     │          Status          │\n"
+printf "├───────────────────┼──────────────────────────┤\n"
+
+if grep -q "\"utag\": \"$username\"" /etc/v2ray/config/trojan.json; then
+  sed -i "/\"utag\": \"$username\"/,/{/d" /etc/v2ray/config/trojan.json
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted from trojan.json"
+else
+  printf "│ %-17s │ %-24s │\n" "$username" "Not found in trojan.json"
+fi
+
+if [ -f "/etc/v2ray/trojan/$username.json" ]; then
+  rm -f "/etc/v2ray/trojan/$username.json"
+  printf "│ %-17s │ %-24s │\n" "$username" "Deleted $username.json"
+fi
+
+printf "╰───────────────────┴──────────────────────────╯\n"
+service v2ray@trojan restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-trojan

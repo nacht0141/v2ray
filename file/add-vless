@@ -1,0 +1,56 @@
+#!/bin/bash
+domain=$(cat /etc/v2ray/domain.txt)
+uuid=$(cat /proc/sys/kernel/random/uuid)
+lvl=0
+clear
+echo "================================"
+echo "        Tambah Akun Vless"
+echo "================================"
+echo "• IP      : ${domain}"
+echo "• Port    : 8880, 8443(tls)"
+echo "• Network : ws"
+echo "• Service : vless websocket"
+echo "• Type    : tls&nontls"
+echo "• Path    : /vlessws(tls off), /vlesstls(tls)"
+echo "=============================="
+read -p $'\u27A4 Username : ' username
+read -p $'\u27A4 Expired (days): ' exp
+re='^[0-9]+$'
+if ! [[ $exp =~ $re ]] ; then
+   echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-vless
+fi
+expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
+if [ -f "/etc/v2ray/vless/$username-ntls.json" ] || [ -f "/etc/v2ray/vless/$username-tls.json" ]; then
+    echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
+    echo " [ ! ] Silahkan gunakan username lain."
+    exit 1
+fi
+cat > /etc/v2ray/vless/$username-ntls.json <<-EOF
+vless://${uuid}@${domain}:8880?path=%2Fvlessws&security=none&encryption=none&host=${domain}&type=ws#${username}
+EOF
+cat> /etc/v2ray/vless/$username-tls.json <<-EOF
+vless://${uuid}@${domain}:8443?path=%2Fvlesstls&security=tls&encryption=none&host=${domain}&type=ws&sni=${domain}#${username}
+EOF
+sed -i "/\"clients\": \[/a\ \ \ \ \ \ \ \ {\n\ \ \ \ \ \ \ \ \ \ \ \"utag\": \"$username\",\n\ \ \ \ \ \ \ \ \ \ \ \"exp\": \"$expired_date\",\n\ \ \ \ \ \ \ \ \ \ \ \"id\": \"$uuid\",\n\ \ \ \ \ \ \ \ \ \ \ \"level\": $lvl\n\ \ \ \ \ \ \ \ }," /etc/v2ray/config/vless.json
+clear
+nontls=$(cat /etc/v2ray/vless/$username-ntls.json)
+tls=$(cat /etc/v2ray/vless/$username-tls.json)
+echo "================================";
+echo "======= VLESS WEBSOCKET ========";
+echo "• TAG : ${username}"
+echo "• IP : ${domain}";
+echo "• PORT : 8880, 8443(tls)"
+echo "• UUID : ${uuid}"
+echo "• LEVEL : ${lvl}"
+echo "• NETWORK : ws"
+echo "• PATH : /vlessws(tls off), /vlesstls(tls)"
+echo "• EXPIRED : $expired_date"
+echo "============= LINK =============";
+echo "[ NON TLS ] : $nontls"
+echo "================================";
+echo "[ TLS ] : $tls"
+echo "================================";
+service v2ray@vless restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-vless

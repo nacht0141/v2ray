@@ -1,0 +1,30 @@
+#!/bin/bash
+clear
+echo "╭───────────────────────────╮"
+echo "│         PILIH MENU        │"
+echo "│           VMESS           │"
+echo "╰───────────────────────────╯"
+echo ""
+echo "+----+----------------------+"
+echo "|    |        MENU          |"
+echo "+----+----------------------+"
+echo "|  1 | Tambah akun          |"
+echo "|  2 | Hapus akun           |"
+echo "|  3 | Cek akun             |"
+echo "|  4 | Kembali              |"
+echo "+----+----------------------+"
+echo ""
+read -p "Masukkan pilihan (1-4): " pilih
+
+# Cek input pengguna menggunakan perintah case
+case "$pilih" in
+  1) add-vmess ;;
+  2) del-vmess ;;
+  3) chk-vmess ;;
+  4) menu ;;
+  "")
+      menu-vmess ;;
+  *)
+      echo "Pilihan tidak valid. Silakan masukkan angka 1-4."
+      menu-vmess ;;
+esac

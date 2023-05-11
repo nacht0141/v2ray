@@ -1,0 +1,88 @@
+#!/bin/bash
+domain=$(cat /etc/v2ray/domain.txt)
+uuid=$(cat /proc/sys/kernel/random/uuid)
+alterid=0
+clear
+echo "================================"
+echo "        Tambah Akun Vmess"
+echo "================================"
+echo "• IP      : ${domain}"
+echo "• Port : 80, 443(tls)"
+echo "• Network : ws"
+echo "• Service : vmess websocket"
+echo "• Type    : tls&nontls"
+echo "• Path : /ws(tls off), /wstls(tls)"
+echo "=============================="
+read -p $'\u27A4 Username : ' username
+read -p $'\u27A4 Expired (days): ' exp
+re='^[0-9]+$'
+if ! [[ $exp =~ $re ]] ; then
+   echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-vmess
+fi
+expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
+if [ -f "/etc/v2ray/vmess/$username-tls.json" ] || [ -f "/etc/v2ray/vmess/$username-ntls.json" ]; then
+    echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
+    echo " [ ! ] Silahkan gunakan username lain."
+    exit 1
+fi
+cat > /etc/v2ray/vmess/$username-ntls.json <<-EOF
+      {
+        "add":"${domain}",
+        "aid":"0",
+        "alpn":""
+        ,"fp":""
+        ,"host":"${domain}"
+        ,"id":"${uuid}"
+        ,"net":"ws",
+        "path":"/ws",
+        "port": 80,
+        "ps":"${username}",
+        "scy":"auto",
+        "sni":"",
+        "tls":"",
+        "type":"",
+        "v":"2"
+      }
+EOF
+cat> /etc/v2ray/vmess/$username-tls.json <<-EOF
+      {
+        "add":"${domain}",
+        "aid":"0",
+        "alpn":"",
+        "fp":"",
+        "host":"${domain}"
+        ,"id":"${uuid}",
+        "net":"ws",
+        "path":"/wstls",
+        "port": 443,
+        "ps":"${username}",
+        "scy":"auto",
+        "sni":"${domain}",
+        "tls":"tls",
+        "type":"",
+        "v":"2"
+      }
+EOF
+sed -i "/\"clients\": \[/a\ \ \ \ \ \ \ \ {\n\ \ \ \ \ \ \ \ \ \ \ \"utag\": \"$username\",\n\ \ \ \ \ \ \ \ \ \ \ \"exp\": \"$expired_date\",\n\ \ \ \ \ \ \ \ \ \ \ \"id\": \"$uuid\",\n\ \ \ \ \ \ \ \ \ \ \ \"alterId\": $alterid\n\ \ \ \ \ \ \ \ }," /etc/v2ray/config/config.json
+nontls="vmess://$(base64 -w 0 /etc/v2ray/vmess/$username-ntls.json)"
+tls="vmess://$(base64 -w 0 /etc/v2ray/vmess/$username-tls.json)"
+clear
+echo "================================";
+echo "======= VMESS WEBSOCKET ========";
+echo "• TAG : ${username}"
+echo "• IP : ${domain}";
+echo "• PORT : 80, 443(tls)"
+echo "• UUID : ${uuid}"
+echo "• ALTERID : ${alterid}"
+echo "• NETWORK : ws"
+echo "• PATH : /ws(tls off), /wstls(tls)"
+echo "• EXPIRED : $expired_date"
+echo "============= LINK =============";
+echo "[ NON TLS ] : $nontls"
+echo "================================";
+echo "[ TLS ] : $tls"
+echo "================================";
+service v2ray restart
+echo ""
+read -p $'[PRESS ENTER] \u27A4'
+menu-vmess
