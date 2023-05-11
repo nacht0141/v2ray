@@ -57,17 +57,18 @@ printf "│  Trojan  : %-10s | %d users   │\n" "$stat_trojan" "$usr_trojan"
 printf "│───────────────────────────────────│\n"
 printf "│               MENU                │\n"
 printf "│───────────────────────────────────│\n"
-printf "│ [1] Menu vmess                    │\n"
-printf "│ [2] Menu vless                    │\n"
-printf "│ [3] Menu trojan                   │\n"
-printf "│ [4] Keluar                        │\n"
+printf "│ [1] Menu vmess  | [5] Keluar      │\n"
+printf "│ [2] Menu vless  |                 │\n"
+printf "│ [3] Menu trojan |                 │\n"
+printf "│ [4] Speedtest   |                 │\n"
 printf "╰───────────────────────────────────╯\n\n"
-read -p "Masukkan pilihan (1-4): " pilih
+read -p "Masukkan pilihan (1-5): " pilih
 case "$pilih" in
   1) menu-vmess ;;
   2) menu-vless ;;
   3) menu-trojan ;;
-  4) echo "Sayonaraaa!"; exit 0 ;;
+  4) speedtest ;;
+  5) echo "Sayonaraaa!"; exit 0 ;;
   "")
       menu ;;
   *)

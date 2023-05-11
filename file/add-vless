@@ -23,7 +23,7 @@ expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
 if [ -f "/etc/v2ray/vless/$username-ntls.json" ] || [ -f "/etc/v2ray/vless/$username-tls.json" ]; then
     echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
     echo " [ ! ] Silahkan gunakan username lain."
-    exit 1
+    add-vless
 fi
 cat > /etc/v2ray/vless/$username-ntls.json <<-EOF
 vless://${uuid}@${domain}:8880?path=%2Fvlessws&security=none&encryption=none&host=${domain}&type=ws#${username}
