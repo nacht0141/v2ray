@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 config=$(cat /etc/v2ray/config/trojan.json)
 users=$(echo "$config" | grep -oP '(?<="utag": ")[^"]*|(?<="exp": ")[^"]*')
 if [ -z "$users" ]; then
@@ -21,4 +20,4 @@ else
 fi
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-trojan
+clear&&menu-trojan
