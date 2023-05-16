@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 config=$(cat /etc/v2ray/config/config.json)
 #users=$(echo "$config" | grep -oP '(?<="utag": ")[^"]*|(?<="exp": ")[^"]*')
 users=$(echo "$config" | grep -oP '(?<="utag": ")[^"]*|(?<="exp": ")[^"]*' | awk '!a[$1]++')
@@ -22,4 +21,4 @@ else
 fi
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-vmess
+clear&&menu-vmess

@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭───────────────────────────╮"
 echo "│         PILIH MENU        │"
 echo "│           VMESS           │"
@@ -18,13 +17,14 @@ read -p "Masukkan pilihan (1-4): " pilih
 
 # Cek input pengguna menggunakan perintah case
 case "$pilih" in
-  1) add-vmess ;;
-  2) del-vmess ;;
-  3) chk-vmess ;;
-  4) menu ;;
+  1) clear&&add-vmess ;;
+  2) clear&&del-vmess ;;
+  3) clear&&chk-vmess ;;
+  4) clear&&menu ;;
   "")
-      menu-vmess ;;
+      clear&&menu-vmess ;;
   *)
+      clear
       echo "Pilihan tidak valid. Silakan masukkan angka 1-4."
       menu-vmess ;;
 esac

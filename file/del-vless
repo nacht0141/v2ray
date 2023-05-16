@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭──────────────────────────────────────────────╮"
 echo "│               DELETE AKUN VLESS              │"
 echo "╰──────────────────────────────────────────────╯"
@@ -7,10 +6,11 @@ read -p $'\u27A4 Username : ' username
 
 # check if configuration file exists
 if [ ! -f "/etc/v2ray/vless/$username-tls.json" ] || [ ! -f "/etc/v2ray/vless/$username-ntls.json" ]; then
+    clear
     echo " [ ! ] Maaf konfigurasi vless  $username tidak ditemukan."
     echo ""
     read -p $'[PRESS ENTER] \u27A4'
-    menu-vless
+    clear&&menu-vless
     exit 1
 fi
 printf "╭──────────────────────────────────────────────╮\n"
@@ -39,4 +39,4 @@ printf "╰───────────────────┴───
 service v2ray@vless restart
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-vless
+clear&&menu-vless

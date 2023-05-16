@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭───────────────────────────╮"
 echo "│         PILIH MENU        │"
 echo "│           VLESS           │"
@@ -18,13 +17,14 @@ read -p "Masukkan pilihan (1-4): " pilih
 
 # Cek input pengguna menggunakan perintah case
 case "$pilih" in
-  1) add-vless ;;
-  2) del-vless ;;
-  3) chk-vless ;;
-  4) menu ;;
+  1) clear&&add-vless ;;
+  2) clear&&del-vless ;;
+  3) clear&&chk-vless ;;
+  4) clear&&menu ;;
   "")
-      menu-vless ;;
+      clear&&menu-vless ;;
   *)
+      clear
       echo "Pilihan tidak valid. Silakan masukkan angka 1-4."
-      bash menu-vless.sh ;;
+      menu-vless ;;
 esac

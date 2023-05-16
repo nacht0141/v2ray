@@ -2,7 +2,6 @@
 domain=$(cat /etc/v2ray/domain.txt)
 uuid=$(cat /proc/sys/kernel/random/uuid)
 lvl=0
-clear
 echo "================================"
 echo "        Tambah Akun Vless"
 echo "================================"
@@ -14,13 +13,20 @@ echo "• Type    : tls&nontls"
 echo "• Path    : /vlessws(tls off), /vlesstls(tls)"
 echo "=============================="
 read -p $'\u27A4 Username : ' username
+if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
+   clear
+   echo " [ ! ] Username hanya dapat berisi angka dan huruf." >&2
+   add-trojan
+fi
 read -p $'\u27A4 Expired (days): ' exp
 re='^[0-9]+$'
 if ! [[ $exp =~ $re ]] ; then
+   clear
    echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-vless
 fi
 expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
 if [ -f "/etc/v2ray/vless/$username-ntls.json" ] || [ -f "/etc/v2ray/vless/$username-tls.json" ]; then
+    clear
     echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
     echo " [ ! ] Silahkan gunakan username lain."
     add-vless
@@ -53,4 +59,4 @@ echo "================================";
 service v2ray@vless restart
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-vless
+clear&-menu-vless

@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭───────────────────────────╮"
 echo "│         PILIH MENU        │"
 echo "│           TROJAN          │"
@@ -18,13 +17,14 @@ read -p "Masukkan pilihan (1-4): " pilih
 
 # Cek input pengguna menggunakan perintah case
 case "$pilih" in
-  1) add-trojan ;;
-  2) del-trojan ;;
-  3) chk-trojan ;;
-  4) menu ;;
+  1) clear&&add-trojan ;;
+  2) clear&&del-trojan ;;
+  3) clear&&chk-trojan ;;
+  4) clear&&menu ;;
   "")
-      menu-trojan ;;
+      clear&&menu-trojan ;;
   *)
+      clear
       echo "Pilihan tidak valid. Silakan masukkan angka 1-4."
       menu-trojan ;;
 esac

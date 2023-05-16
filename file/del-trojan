@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭──────────────────────────────────────────────╮"
 echo "│               DELETE AKUN TROJAN             │"
 echo "╰──────────────────────────────────────────────╯"
@@ -7,10 +6,11 @@ read -p $'\u27A4 Username : ' username
 
 # check if configuration file exists
 if [ ! -f "/etc/v2ray/trojan/$username.json" ]; then
+    clear
     echo " [ ! ] Maaf konfigurasi trojan  $username tidak ditemukan."
     echo ""
     read -p $'[PRESS ENTER] \u27A4'
-    menu-trojan
+    clear&&menu-trojan
     exit 1
 fi
 printf "╭──────────────────────────────────────────────╮\n"
@@ -35,4 +35,4 @@ printf "╰───────────────────┴───
 service v2ray@trojan restart
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-trojan
+clear&&menu-trojan

@@ -3,7 +3,6 @@ domain=$(cat /etc/v2ray/domain.txt)
 uuid=$(cat /proc/sys/kernel/random/uuid)
 pwd=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)
 lvl=8
-clear
 echo "================================"
 echo "        Tambah Akun Trojan"
 echo "================================"
@@ -12,22 +11,29 @@ echo "• Port    : 2087(tls)"
 echo "• Network : gRPC"
 echo "• Service : trojan gRPC"
 echo "• Type    : tls"
-echo "• Path/SN : trgrpc"
+echo "• Path/SN : /trojangrpc"
 echo "=============================="
 read -p $'\u27A4 Username : ' username
+if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
+   clear
+   echo " [ ! ] Username hanya dapat berisi angka dan huruf." >&2
+   add-trojan
+fi
 read -p $'\u27A4 Expired (days): ' exp
 re='^[0-9]+$'
 if ! [[ $exp =~ $re ]] ; then
+   clear
    echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-trojan
 fi
 expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
 if [ -f "/etc/v2ray/trojan/$username.json" ]; then
+    clear
     echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
     echo " [ ! ] Silahkan gunakan username lain."
-    add-troja 
+    add-trojan
 fi
 cat > /etc/v2ray/trojan/$username.json <<-EOF
-trojan://${pwd}@${domain}:2087?mode=gun&security=tls&type=grpc&serviceName=trgrpc&sni=${domain}#${username}
+trojan://${pwd}@${domain}:2087?mode=gun&security=tls&type=grpc&serviceName=/trojangrpc&sni=${domain}#${username}
 EOF
 sed -i "/\"clients\": \[/a\ \ \ \ \ \ \ \ {\n\ \ \ \ \ \ \ \ \ \ \ \"utag\": \"$username\",\n\ \ \ \ \ \ \ \ \ \ \ \"exp\": \"$expired_date\",\n\ \ \ \ \ \ \ \ \ \ \ \"password\": \"$pwd\",\n\ \ \ \ \ \ \ \ \ \ \ \"level\": $lvl\n\ \ \ \ \ \ \ \ }," /etc/v2ray/config/trojan.json
 clear
@@ -40,7 +46,7 @@ echo "• PORT : 2087"
 echo "• LEVEL : ${lvl}"
 echo "• PASSWORD : ${pwd}"
 echo "• NETWORK : grpc"
-echo "• SERVICE NAME : trgrpc"
+echo "• SERVICE NAME : /trojangrpc"
 echo "• EXPIRED : $expired_date"
 echo "============= LINK =============";
 echo "[ TROJAN gRPC ] : ${trgrpc}"
@@ -48,4 +54,4 @@ echo "================================";
 service v2ray@trojan restart
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-trojan
+clear&&menu-trojan

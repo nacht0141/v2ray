@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 echo "╭──────────────────────────────────────────────╮"
 echo "│               DELETE AKUN VMESS              │"
 echo "╰──────────────────────────────────────────────╯"
@@ -7,10 +6,11 @@ read -p $'\u27A4 Username : ' username
 
 # check if configuration file exists
 if [ ! -f "/etc/v2ray/vmess/$username-tls.json" ] || [ ! -f "/etc/v2ray/vmess/$username-ntls.json" ]; then
+    clear
     echo " [ ! ] Maaf konfigurasi vmess  $username tidak ditemukan."
     echo ""
     read -p $'[PRESS ENTER] \u27A4'
-    menu-vmess
+    clear&&menu-vmess
     exit 1
 fi
 printf "╭──────────────────────────────────────────────╮\n"
@@ -39,4 +39,4 @@ printf "╰───────────────────┴───
 service v2ray restart
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-menu-vmess
+clear&-menu-vmess
