@@ -51,7 +51,7 @@ echo "• EXPIRED : $expired_date"
 echo "============= LINK =============";
 echo "[ TROJAN gRPC ] : ${trgrpc}"
 echo "================================";
-service v2ray@trojan restart
+systemctl restart v2ray@trojan
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
 clear&&menu-trojan

@@ -56,7 +56,7 @@ echo "[ NON TLS ] : $nontls"
 echo "================================";
 echo "[ TLS ] : $tls"
 echo "================================";
-service v2ray@vless restart
+systemctl restart v2ray@vless
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
 clear&-menu-vless

@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 # Assign system information to variables
 OS=$(cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2 | tr -d \")
 RAM=$(free -h | grep Mem | awk '{printf "%-10s / %-10s", $2, $4}')
@@ -56,17 +57,18 @@ printf "│  Trojan  : %-10s | %d users   │\n" "$stat_trojan" "$usr_trojan"
 printf "│───────────────────────────────────│\n"
 printf "│               MENU                │\n"
 printf "│───────────────────────────────────│\n"
-printf "│ [1] Menu vmess                    │\n"
-printf "│ [2] Menu vless                    │\n"
-printf "│ [3] Menu trojan                   │\n"
-printf "│ [4] Keluar                        │\n"
+printf "│ [1] Menu vmess  | [5] Keluar      │\n"
+printf "│ [2] Menu vless  |                 │\n"
+printf "│ [3] Menu trojan |                 │\n"
+printf "│ [4] Speedtest   |                 │\n"
 printf "╰───────────────────────────────────╯\n\n"
-read -p "Masukkan pilihan (1-4): " pilih
+read -p "Masukkan pilihan (1-5): " pilih
 case "$pilih" in
   1) clear&&menu-vmess ;;
   2) clear&&menu-vless ;;
   3) clear&&menu-trojan ;;
-  4) echo "Sayonaraaa!"; exit 0 ;;
+  4) clear&&speedtest ;;
+  5) echo "Sayonaraaa!"; exit 0 ;;
   "")
       clear&&menu ;;
   *)
