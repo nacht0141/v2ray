@@ -59,4 +59,4 @@ echo "================================";
 systemctl restart v2ray@vless
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-clear&-menu-vless
+clear&&menu-vless
