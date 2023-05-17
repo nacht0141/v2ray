@@ -16,7 +16,7 @@ read -p $'\u27A4 Username : ' username
 if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
    clear
    echo " [ ! ] Username hanya dapat berisi angka dan huruf." >&2
-   add-trojan
+   add-vmess
 fi
 read -p $'\u27A4 Expired (days): ' exp
 re='^[0-9]+$'
