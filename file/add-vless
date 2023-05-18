@@ -14,22 +14,20 @@ echo "• Path    : /vlessws(tls off), /vlesstls(tls)"
 echo "=============================="
 read -p $'\u27A4 Username : ' username
 if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
-   clear
    echo " [ ! ] Username hanya dapat berisi angka dan huruf." >&2
-   add-trojan
+   exit 1
 fi
 read -p $'\u27A4 Expired (days): ' exp
 re='^[0-9]+$'
 if ! [[ $exp =~ $re ]] ; then
-   clear
-   echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-vless
+   echo " [ ! ] Expired hanya bisa diisi angka." >&2
+   exit 1
 fi
 expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
 if [ -f "/etc/v2ray/vless/$username-ntls.json" ] || [ -f "/etc/v2ray/vless/$username-tls.json" ]; then
-    clear
     echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
     echo " [ ! ] Silahkan gunakan username lain."
-    add-vless
+    exit 1
 fi
 cat > /etc/v2ray/vless/$username-ntls.json <<-EOF
 vless://${uuid}@${domain}:8880?path=%2Fvlessws&security=none&encryption=none&host=${domain}&type=ws#${username}

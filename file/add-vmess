@@ -14,22 +14,20 @@ echo "• Path : /ws(tls off), /wstls(tls)"
 echo "=============================="
 read -p $'\u27A4 Username : ' username
 if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
-   clear
    echo " [ ! ] Username hanya dapat berisi angka dan huruf." >&2
-   add-vmess
+   exit 1
 fi
 read -p $'\u27A4 Expired (days): ' exp
 re='^[0-9]+$'
 if ! [[ $exp =~ $re ]] ; then
-   clear
-   echo " [ ! ] Expired hanya bisa diisi angka." >&2; add-vmess
+   echo " [ ! ] Expired hanya bisa diisi angka." >&2
+   exit 1
 fi
 expired_date=$(date -d "+$exp days" "+%Y-%m-%d")
 if [ -f "/etc/v2ray/vmess/$username-tls.json" ] || [ -f "/etc/v2ray/vmess/$username-ntls.json" ]; then
-    clear
     echo " [ ! ] Maaf konfigurasi untuk username $username sudah ada."
     echo " [ ! ] Silahkan gunakan username lain."
-    add-vmess
+    exit 1
 fi
 cat > /etc/v2ray/vmess/$username-ntls.json <<-EOF
       {
@@ -91,4 +89,4 @@ echo "================================";
 systemctl restart v2ray
 echo ""
 read -p $'[PRESS ENTER] \u27A4'
-clear&-menu-vmess
+clear&&menu-vmess
