@@ -1,9 +1,11 @@
 #!/bin/bash
 clear
+
 # Assign system information to variables
 OS=$(cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2 | tr -d \")
-RAM=$(free -h | grep Mem | awk '{printf "%-10s / %-10s", $2, $4}')
+RAM=$(free -h | grep Mem | awk '{printf "%-5s / %-5s (%.1f%%)", $2, $3, $3/$2 * 100}')
 CPU=$(grep -c processor /proc/cpuinfo)" Core(s)"
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8 "%"}')
 UPTIME=$(uptime -p)
 TIME=$(date +"%A, %d %B %Y %T %Z")
 
@@ -12,13 +14,14 @@ ISP=$(curl -s https://ipapi.co/org/)
 CITY=$(curl -s https://ipapi.co/city/)
 IP=$(curl -s https://ipapi.co/ip/)
 DOMAIN=$(cat /etc/v2ray/domain.txt)
-#check status service
+
+# Check status service
 stat_vmess=$(systemctl is-active --quiet v2ray && echo "active" || echo "inactive")
 stat_vless=$(systemctl is-active --quiet v2ray@vless && echo "active" || echo "inactive")
 stat_trojan=$(systemctl is-active --quiet v2ray@trojan && echo "active" || echo "inactive")
-#check total user
+
+# Check total user
 usr_trojan=$(grep -c 'utag' /etc/v2ray/config/trojan.json)
-#usr_vless=$(grep -c 'utag' /etc/v2ray/config/vless.json)
 usr_vless=$(($(grep -c 'utag' /etc/v2ray/config/vless.json)/2))
 usr_vmess=$(($(grep -c 'utag' /etc/v2ray/config/config.json)/2))
 
@@ -28,7 +31,8 @@ printf "│                       INFORMASI SISTEM                        │\n"
 printf "│                                                               │\n"
 printf "│ OS       : %-50s │\n" "$OS"
 printf "│ RAM      : %-50s │\n" "$RAM"
-printf "│ CPU      : %-50s │\n" "$CPU"
+printf "│ TOTAL CPU: %-50s │\n" "$CPU"
+printf "│ CPU USAGE: %-50s │\n" "$CPU_USAGE"
 printf "│ Uptime   : %-50s │\n" "$UPTIME"
 printf "│ Time     : %-50s │\n" "$TIME"
 printf "│                                                               │\n"
@@ -43,6 +47,7 @@ printf "│ ISP      : %-50s │\n" "$ISP"
 printf "│ IP       : %-50s │\n" "$IP"
 printf "│ DOMAIN   : %-50s │\n" "$DOMAIN"
 printf "╰───────────────────────────────────────────────────────────────╯\n\n"
+
 # Display menu options
 printf "╭───────────╮\n"
 printf "│  PILIHAN  │\n"
@@ -51,9 +56,9 @@ printf "╭───────────────────────
 printf "│              SERVICE              │\n"
 printf "│───────────────────────────────────│\n"
 printf "│                                   │\n"
-printf "│  VMess   : %-10s | %d users   │\n" "$stat_vmess" "$usr_vmess"
-printf "│  VLESS   : %-10s | %d users   │\n" "$stat_vless" "$usr_vless"
-printf "│  Trojan  : %-10s | %d users   │\n" "$stat_trojan" "$usr_trojan"
+printf "│  VMess   : %-6s | %d users       │\n" "$stat_vmess" "$usr_vmess"
+printf "│  VLESS   : %-6s | %d users       │\n" "$stat_vless" "$usr_vless"
+printf "│  Trojan  : %-6s | %d users       │\n" "$stat_trojan" "$usr_trojan"
 printf "│───────────────────────────────────│\n"
 printf "│               MENU                │\n"
 printf "│───────────────────────────────────│\n"
@@ -62,7 +67,9 @@ printf "│ [2] Menu vless  |                 │\n"
 printf "│ [3] Menu trojan |                 │\n"
 printf "│ [4] Speedtest   |                 │\n"
 printf "╰───────────────────────────────────╯\n\n"
+
 read -p "Masukkan pilihan (1-5): " pilih
+
 case "$pilih" in
   1) clear&&menu-vmess ;;
   2) clear&&menu-vless ;;

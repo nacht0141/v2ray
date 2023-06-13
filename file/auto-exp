@@ -9,6 +9,11 @@ for file in /etc/v2ray/config/*.json; do
     | cut -d\" -f4 \
     | while read username; do
         echo "Deleting user $username"
+        rm -f /etc/v2ray/vmess/$username-tls.json
+        rm -f /etc/v2ray/vmess/$username-ntls.json
+        rm -f /etc/v2ray/vless/$username-tls.json
+        rm -f /etc/v2ray/vless/$username-ntls.json
+        rm -f /etc/v2ray/trojan/$username.json
         sed -i "/\"utag\": \"$username\"/,/{/d" "$file"
       done
 done

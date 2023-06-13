@@ -11,7 +11,7 @@ echo "• Port    : 2087(tls)"
 echo "• Network : gRPC"
 echo "• Service : trojan gRPC"
 echo "• Type    : tls"
-echo "• Path/SN : /trojangrpc"
+echo "• Path/SN : trgrpc"
 echo "=============================="
 read -p $'\u27A4 Username : ' username
 if ! [[ "$username" =~ ^[[:alnum:]]+$ ]]; then
@@ -32,7 +32,7 @@ if [ -f "/etc/v2ray/trojan/$username.json" ]; then
     exit 1
 fi
 cat > /etc/v2ray/trojan/$username.json <<-EOF
-trojan://${pwd}@${domain}:2087?mode=gun&security=tls&type=grpc&serviceName=/trojangrpc&sni=${domain}#${username}
+trojan://${pwd}@${domain}:2087?mode=gun&security=tls&type=grpc&serviceName=trgrpc&sni=${domain}#${username}
 EOF
 sed -i "/\"clients\": \[/a\ \ \ \ \ \ \ \ {\n\ \ \ \ \ \ \ \ \ \ \ \"utag\": \"$username\",\n\ \ \ \ \ \ \ \ \ \ \ \"exp\": \"$expired_date\",\n\ \ \ \ \ \ \ \ \ \ \ \"password\": \"$pwd\",\n\ \ \ \ \ \ \ \ \ \ \ \"level\": $lvl\n\ \ \ \ \ \ \ \ }," /etc/v2ray/config/trojan.json
 clear
@@ -45,7 +45,7 @@ echo "• PORT : 2087"
 echo "• LEVEL : ${lvl}"
 echo "• PASSWORD : ${pwd}"
 echo "• NETWORK : grpc"
-echo "• SERVICE NAME : /trojangrpc"
+echo "• SERVICE NAME : trgrpc"
 echo "• EXPIRED : $expired_date"
 echo "============= LINK =============";
 echo "[ TROJAN gRPC ] : ${trgrpc}"
